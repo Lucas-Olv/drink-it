@@ -1,0 +1,7 @@
+{
+  "name": "drink-it",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
