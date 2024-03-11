@@ -44,7 +44,7 @@ async function askPermission() {
 
 async function subscribeUserToPush() {
   return navigator.serviceWorker
-    .register('/service-worker.js')
+    .register('./service-worker.js')
     .then(function (registration) {
       const subscribeOptions = {
         userVisibleOnly: true,
