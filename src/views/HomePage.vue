@@ -3,7 +3,6 @@
     <ion-content :fullscreen="true">
       <div id="container">
         <ion-button @click="requestPermissionAndShowToken">SUBSCRIBE</ion-button>
-        <p>{{ token }}</p>
       </div>
     </ion-content>
   </ion-page>
@@ -11,13 +10,11 @@
 
 <script setup lang="ts">
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/vue';
-import { ref } from 'vue'
-import {requestUserPermissions } from '../utility/FirebaseApi'
-
-let token: any = ref('');
+import { requestUserPermissions } from '../utility/FirebaseApi'
 
 async function requestPermissionAndShowToken() {
-  token.value = await requestUserPermissions();
+  let token = await requestUserPermissions();
+  alert("OK");
 }
 </script>
 

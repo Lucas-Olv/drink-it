@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getMessaging, getToken } from "firebase/messaging";
+import { getFirestore, addDoc, collection } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: `${import.meta.env.VITE_API_KEY}`,
@@ -16,6 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 const messaging = getMessaging(app);
+const db = getFirestore(app);
 
 export async function requestUserPermissions() {
   console.log('Requesting permission...');
@@ -23,12 +25,18 @@ export async function requestUserPermissions() {
 
   if (permissionResult === "granted") {
     const firebaseToken = await getToken(messaging, {vapidKey: `${import.meta.env.VITE_VAPID_KEY}`})
-
     if (firebaseToken) {
-      // Send token to database;
+      try {
+        const docRef = await addDoc(collection(db, "users"), {
+          token: firebaseToken
+        });
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+      console.log(firebaseToken);
+      return firebaseToken;
     }
-    console.log(firebaseToken);
-    return firebaseToken;
 
   } else {
     console.warn("User denied permission for notifications.");

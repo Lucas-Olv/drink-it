@@ -33,3 +33,5 @@ package-lock.json
 /platforms
 /plugins
 /www
+/.firebase
+/.github
