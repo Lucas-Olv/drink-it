@@ -16,7 +16,7 @@ export async function subscribeUserToPushNotifications() {
 
 async function registerServiceWorker() {
   return navigator.serviceWorker
-    .register('./service-worker.js')
+    .register('/service-worker.js')
     .then(function (registration) {
       console.log('Service worker successfully registered.');
       return registration;
@@ -44,7 +44,7 @@ async function askPermission() {
 
 async function subscribeUserToPush() {
   return navigator.serviceWorker
-    .register('./service-worker.js')
+    .register('/service-worker.js')
     .then(function (registration) {
       const subscribeOptions = {
         userVisibleOnly: true,
