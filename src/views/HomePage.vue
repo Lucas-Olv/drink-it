@@ -2,7 +2,8 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <div id="container">
-        <ion-button @click="subscribeUserToPushNotifications">SUBSCRIBE</ion-button>
+        <ion-button @click="requestPermissionAndShowToken">SUBSCRIBE</ion-button>
+        <p>{{ token }}</p>
       </div>
     </ion-content>
   </ion-page>
@@ -10,7 +11,14 @@
 
 <script setup lang="ts">
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/vue';
-import { subscribeUserToPushNotifications } from '../Utility/NotificationApi'
+import { ref } from 'vue'
+import {requestUserPermissions } from '../utility/FirebaseApi'
+
+let token: any = ref('');
+
+async function requestPermissionAndShowToken() {
+  token.value = await requestUserPermissions();
+}
 </script>
 
 <style scoped>
