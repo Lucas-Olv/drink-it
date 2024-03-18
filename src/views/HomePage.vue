@@ -10,11 +10,12 @@
 
 <script setup lang="ts">
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/vue';
-import { requestUserPermissions } from '../utility/FirebaseApi'
+import FirebaseApi from '../utility/FirebaseApi';
+
+const firebaseApi = new FirebaseApi();
 
 async function requestPermissionAndShowToken() {
-  let token = await requestUserPermissions();
-  alert("OK");
+  let token = await firebaseApi.requestUserPermissions();
 }
 </script>
 
