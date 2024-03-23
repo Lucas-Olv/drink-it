@@ -2,6 +2,8 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <div id="container">
+        <ion-button @click="$router.push('/PreferencesScreen')">Router</ion-button>
+        <ion-button @click="loginWithGoogle">Google Auth</ion-button>
         <ion-button @click="requestPermissionAndShowToken">SUBSCRIBE</ion-button>
       </div>
     </ion-content>
@@ -14,8 +16,12 @@ import FirebaseApi from '../utility/FirebaseApi';
 
 const firebaseApi = new FirebaseApi();
 
+async function loginWithGoogle() {
+  firebaseApi.logInWithGoogleProvider();
+}
+
 async function requestPermissionAndShowToken() {
-  let token = await firebaseApi.requestUserPermissions();
+  firebaseApi.requestUserPermissions();
 }
 </script>
 

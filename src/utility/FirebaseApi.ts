@@ -39,6 +39,7 @@ export default class FirebaseApi {
 
   async requestUserPermissions() {
     const userUid = localStorage.getItem('userUid') || '';
+    const userPreferences = JSON.parse(localStorage.getItem('userPreferences') || "{}");
     const permissionResult = await Notification.requestPermission();
 
     if (permissionResult === "granted") {
