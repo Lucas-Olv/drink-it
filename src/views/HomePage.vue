@@ -1,56 +1,56 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="container">
-        <ion-button @click="$router.push('/PreferencesScreen')">Router</ion-button>
-        <ion-button @click="loginWithGoogle">Google Auth</ion-button>
-        <ion-button @click="requestPermissionAndShowToken">SUBSCRIBE</ion-button>
-      </div>
+      <section class="preferences-wrapper">
+        <h1 class="preferences-wrapper__title">{{ welcomeMessage }}</h1>
+        <img @click="firebaseApi.requestUserPermissions" class="cat" src="../../public/cat.png" alt="">
+        <p>Feito com &#128147 por Lucas</p>
+      </section>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/vue';
-import FirebaseApi from '../utility/FirebaseApi';
+import { IonContent, IonPage } from '@ionic/vue';
+import FirebaseApi from '@/utility/FirebaseApi';
 
+const welcomeMessage: string = `Olá, ${localStorage.getItem('userDisplayName') || ""}`;
 const firebaseApi = new FirebaseApi();
 
-async function loginWithGoogle() {
-  firebaseApi.logInWithGoogleProvider();
-}
-
-async function requestPermissionAndShowToken() {
-  firebaseApi.requestUserPermissions();
-}
 </script>
 
-<style scoped>
-#container {
-  text-align: center;
-  
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+<style lang="scss">
+ion-content {
+  --background: #F2DFE2;
+  --color: #591B1B;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+ion-button {
+  width: 100%;
+  --background: #591B1B;
+  --background-hover: #591B1B;
+  --background-activated: #451818;
+  --background-focused: #451818;
+  --color: #F2DFE2;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  
-  color: #8c8c8c;
-  
-  margin: 0;
-}
+.preferences-wrapper {
+  height: 100%;
+  padding: 12dvw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20dvh;
 
-#container a {
-  text-decoration: none;
+  &__title {
+    font-weight: bold;
+    font-size: 2rem;
+  }
+
+  &__cat {
+    height: 10dvh;
+    width: 10dvw;
+  }
 }
 </style>

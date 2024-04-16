@@ -12,11 +12,10 @@ export default class FirebaseApi {
   private static messaging: Messaging;
   private static vapidKey: {};
   private static db: Firestore;
-  private static auth : Auth;
-  private static authProvider : GoogleAuthProvider;
+  private static auth: Auth;
+  private static authProvider: GoogleAuthProvider;
 
   init() {
-
     FirebaseApi.firebaseConfig = {
       apiKey: `${import.meta.env.VITE_API_KEY}`,
       authDomain: `${import.meta.env.VITE_AUTH_DOMAIN}`,
@@ -37,52 +36,72 @@ export default class FirebaseApi {
     FirebaseApi.authProvider = new GoogleAuthProvider();
   }
 
+  async logInWithGoogleProvider() {
+    const result = await signInWithPopup(FirebaseApi.auth, FirebaseApi.authProvider);
+    const user = result.user;
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential?.accessToken;
+
+    localStorage.setItem('userUid', user.uid);
+    localStorage.setItem('userDisplayName', user.displayName || "");
+    return token;
+
+    // const errorCode = error.code;
+    // const errorMessage = error.message;
+    // // The email of the user's account used.
+    // const email = error.customData.email;
+    // // The AuthCredential type that was used.
+    // const credential = GoogleAuthProvider.credentialFromError(error);
+  }
+
+  async setUserPreferences(docReference: any, deviceToken: string) {
+    await setDoc(docReference, {
+      firebaseMessagingToken: deviceToken,
+    });
+
+    // TODO SET USER PREFERENCES ON DATABASE
+    // await setDoc(docReference, {
+    //   name: user.displayName,
+    //   email: user.email,
+    //   //TODO REMOVE PREFERENCES INFO LATER
+    //   firebaseMessagingToken: "",
+    //   notificationInterval: "",
+    //   dailyIntakeGoal: "",
+    //   firstTimeOnApp: true,
+    //   accessToken: token
+    // });
+  }
+
   async requestUserPermissions() {
-    const userUid = localStorage.getItem('userUid') || '';
-    const userPreferences = JSON.parse(localStorage.getItem('userPreferences') || "{}");
     const permissionResult = await Notification.requestPermission();
+    const docReference = doc(FirebaseApi.db, 'authenticated-users', localStorage.getItem('userUid') || '');
+    const createSchedulerUrl = "https://drink-it-backend.onrender.com/scheduleReminder";
 
     if (permissionResult === "granted") {
-      const firebaseToken = await getToken(FirebaseApi.messaging, FirebaseApi.vapidKey);
-
-      if (firebaseToken) {
-        const docReference = doc(FirebaseApi.db, 'authenticated-users', userUid);
-        await updateDoc(docReference, {firebaseMessagingToken: firebaseToken});
+      try {
+        const firebaseToken = await getToken(FirebaseApi.messaging, FirebaseApi.vapidKey);
+        if (firebaseToken) {
+          await this.setUserPreferences(docReference, firebaseToken);
+          localStorage.setItem('userPreferences', JSON.stringify({ firebaseMessagingToken: firebaseToken }));
+          fetch(createSchedulerUrl, {
+            method: "POST",
+            body: JSON.stringify({
+              userUid: localStorage.getItem('userUid')
+            }),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+          alert('Sucesso!');
+        }
+      } catch (error) {
+        alert("Ops! Tente novamente.");
+        console.log(error);
       }
     } else {
       console.warn("User denied permission for notifications.");
     }
-  }
 
-  logInWithGoogleProvider() {
-    signInWithPopup(FirebaseApi.auth, FirebaseApi.authProvider)
-  .then(async (result) => {
-    const user = result.user;
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential?.accessToken;
-    const docReference = doc(FirebaseApi.db, 'authenticated-users', user.uid);
-
-    localStorage.setItem('userUid', user.uid);
-
-    await setDoc(docReference, {
-      name: user.displayName,
-      email: user.email,
-      firebaseMessagingToken: "",
-      notificationInterval: "",
-      dailyIntakeGoal: "",
-      accessToken: token
-    });
-
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });
   }
 }
 
