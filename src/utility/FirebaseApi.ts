@@ -75,7 +75,6 @@ export default class FirebaseApi {
   async requestUserPermissions() {
     const permissionResult = await Notification.requestPermission();
     const docReference = doc(FirebaseApi.db, 'authenticated-users', localStorage.getItem('userUid') || '');
-    const createSchedulerUrl = "https://drink-it-backend.onrender.com/scheduleReminder";
 
     if (permissionResult === "granted") {
       try {
@@ -83,7 +82,8 @@ export default class FirebaseApi {
         if (firebaseToken) {
           await this.setUserPreferences(docReference, firebaseToken);
           localStorage.setItem('userPreferences', JSON.stringify({ firebaseMessagingToken: firebaseToken }));
-          fetch(createSchedulerUrl, {
+
+          const createReminder = await fetch(`${import.meta.env.VITE_SCHEDULER_URL}`, {
             method: "POST",
             body: JSON.stringify({
               userUid: localStorage.getItem('userUid')
@@ -92,7 +92,12 @@ export default class FirebaseApi {
               "Content-type": "application/json; charset=UTF-8"
             }
           })
-          alert('Sucesso!');
+
+          if (createReminder.ok) {
+            alert('Sucesso!');
+          } else {
+            alert("Erro ao criar um reminder.");
+          }
         }
       } catch (error) {
         alert("Ops! Tente novamente.");
@@ -101,7 +106,6 @@ export default class FirebaseApi {
     } else {
       console.warn("User denied permission for notifications.");
     }
-
   }
 }
 
