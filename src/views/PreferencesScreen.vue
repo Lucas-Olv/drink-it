@@ -3,7 +3,6 @@
     <ion-content :fullscreen="true">
       <section class="preferences-wrapper">
         <h1 class="preferences-wrapper__title">{{ welcomeMessage }}</h1>
-        <img @click="firebaseApi.requestUserPermissions" class="cat" src="../../public/cat.png" alt="">
         <p>Feito com &#128147 por Lucas</p>
       </section>
     </ion-content>
@@ -11,15 +10,12 @@
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonPage } from '@ionic/vue';
-import FirebaseApi from '@/utility/FirebaseApi';
+import { IonContent, IonPage, IonButton, IonItem, IonList, IonInput } from '@ionic/vue';
 
 const welcomeMessage: string = `Olá, ${localStorage.getItem('userDisplayName') || ""}`;
-const firebaseApi = new FirebaseApi();
-
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 ion-content {
   --background: #F2DFE2;
   --color: #591B1B;
@@ -41,16 +37,11 @@ ion-button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20dvh;
+  gap: 80dvh;
 
   &__title {
-    font-weight: bold;
+    font-weight: bolder;
     font-size: 2rem;
-  }
-
-  &__cat {
-    height: 10dvh;
-    width: 10dvw;
   }
 }
 </style>
