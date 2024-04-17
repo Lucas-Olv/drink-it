@@ -3,7 +3,7 @@
     <ion-content :fullscreen="true">
       <section class="preferences-wrapper">
         <h1 class="preferences-wrapper__title">{{ welcomeMessage }}</h1>
-        <img @click="firebaseApi.requestUserPermissions" class="cat" src="/cat.png" alt="Gatinhos!">
+        <img @click="firebaseApi.requestUserPermissions" class="cat" src="../../public/cat.png" alt="Gatinhos!">
         <p class="preferences-wrapper__footer">Feito com &#128147 por Lucas</p>
       </section>
     </ion-content>
