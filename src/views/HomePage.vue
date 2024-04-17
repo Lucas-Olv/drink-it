@@ -3,8 +3,8 @@
     <ion-content :fullscreen="true">
       <section class="preferences-wrapper">
         <h1 class="preferences-wrapper__title">{{ welcomeMessage }}</h1>
-        <img @click="firebaseApi.requestUserPermissions" class="cat" src="../../public/cat.png" alt="">
-        <p>Feito com &#128147 por Lucas</p>
+        <img @click="firebaseApi.requestUserPermissions" class="cat" src="../../public/cat.png" alt="Gatinhos!">
+        <p class="preferences-wrapper__footer">Feito com &#128147 por Lucas</p>
       </section>
     </ion-content>
   </ion-page>
@@ -19,7 +19,7 @@ const firebaseApi = new FirebaseApi();
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 ion-content {
   --background: #F2DFE2;
   --color: #591B1B;
@@ -51,6 +51,10 @@ ion-button {
   &__cat {
     height: 10dvh;
     width: 10dvw;
+  }
+
+  &__footer {
+    font-weight: bolder;
   }
 }
 </style>
