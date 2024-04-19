@@ -82,22 +82,7 @@ export default class FirebaseApi {
         if (firebaseToken) {
           await this.setUserPreferences(docReference, firebaseToken);
           localStorage.setItem('userPreferences', JSON.stringify({ firebaseMessagingToken: firebaseToken }));
-
-          const createReminder = await fetch(`${import.meta.env.VITE_SCHEDULER_URL}`, {
-            method: "POST",
-            body: JSON.stringify({
-              userUid: localStorage.getItem('userUid')
-            }),
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          })
-
-          if (createReminder.ok) {
-            alert('Sucesso!');
-          } else {
-            alert("Erro ao criar um reminder.");
-          }
+          alert("Sucesso!");
         }
       } catch (error) {
         alert("Ops! Tente novamente.");
